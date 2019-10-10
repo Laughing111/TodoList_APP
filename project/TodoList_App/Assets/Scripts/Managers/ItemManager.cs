@@ -19,6 +19,9 @@ public class ItemManager : MonoBehaviour
             if (ins == null)
             {
                 ins = GameObject.Find("ItemManager").GetComponent<ItemManager>();
+                GameObject itemBG = GameObject.Find("ItemBG");
+                ins.layOutManager = itemBG.GetComponent<LayOutManager>();
+                itemBG.GetComponent<UIScrollView>().AddtheRebackFinishEvent(() => ins.CreateItem("BBBBBB", "10:00-15:00"));
 #if UNITY_EDITOR
                 if (ins.FinishCloneAndGoToAdd == null)
                 {
@@ -30,6 +33,8 @@ public class ItemManager : MonoBehaviour
         }
     }
 
+    private LayOutManager layOutManager;
+
     public Action<Transform> FinishCloneAndGoToAdd;
 
     public void CreateItem(string content, string timeDeadLine = null)
@@ -38,6 +43,6 @@ public class ItemManager : MonoBehaviour
         GameObject itemObject = Instantiate(itemPrefab);
         itemObject.transform.Find("itemContent").GetComponent<Text>().text = content;
         itemObject.transform.Find("sepLine/timeRange").GetComponent<Text>().text = timeDeadLine;
-        FinishCloneAndGoToAdd?.Invoke(itemObject.transform);
+        layOutManager.AddChildItem(itemObject.transform);
     }
 }

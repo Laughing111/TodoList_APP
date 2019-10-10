@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,6 +40,8 @@ public class UIScrollView : MonoBehaviour
     /// </summary>
     private Vector2 contentSize;
 
+    private Action rebackFinish;
+
     public enum ScrollMoveType
     {
         horizontal,
@@ -53,6 +56,7 @@ public class UIScrollView : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+
         UIRect = transform.GetComponent<RectTransform>();
         //初始计算Item内容的尺寸
         CalculateOriginUIRectPos();
@@ -85,7 +89,7 @@ public class UIScrollView : MonoBehaviour
         else
         {
             //结束滑动时，按Item内容进行回归正常位置
-            CheckAndSetOriginPosForUIRect();
+            CheckAndSetOriginPosForUIRect(rebackFinish);
         }
     }
 
@@ -96,15 +100,15 @@ public class UIScrollView : MonoBehaviour
     /// </summary>
     private void CalculateOriginUIRectPos()
     {
-        currentItemCount = transform.childCount-1;
+        currentItemCount = transform.childCount - 1;
 
         if (scrollMoveType == ScrollMoveType.vertical)
         {
-            originUIRectPos.x = originUIRectPos.y= UIRect.anchoredPosition.y;
+            originUIRectPos.x = originUIRectPos.y = UIRect.anchoredPosition.y;
             if (currentItemCount > 0)
             {
                 contentSize.x = UIRect.GetChild(0).GetComponent<RectTransform>().rect.width;
-                for (int i=1;i< currentItemCount; i++)
+                for (int i = 1; i < currentItemCount; i++)
                 {
                     contentSize.y += UIRect.GetChild(i).GetComponent<RectTransform>().rect.height;
                 }
@@ -114,7 +118,7 @@ public class UIScrollView : MonoBehaviour
                 originUIRectPos.x = UIRect.anchoredPosition.y + contentSize.y - UIRect.rect.height;
             }
         }
-        else if(scrollMoveType==ScrollMoveType.horizontal)
+        else if (scrollMoveType == ScrollMoveType.horizontal)
         {
 
         }
@@ -140,7 +144,7 @@ public class UIScrollView : MonoBehaviour
     /// 不计算相对差值
     /// </summary>
     /// <param name="originPosValue"></param>
-    private void ChangeUIRectPos(float originPosValue)
+    private void ChangeUIRectPos(float originPosValue,Action onFinish=null)
     {
         if (scrollMoveType == ScrollMoveType.vertical)
         {
@@ -150,24 +154,26 @@ public class UIScrollView : MonoBehaviour
         {
             UIRect.SetAnchoredPosition(x: originPosValue);
         }
+        onFinish?.Invoke();
     }
 
     /// <summary>
     /// 设置位置回归
     /// </summary>
-    private void CheckAndSetOriginPosForUIRect()
+    private void CheckAndSetOriginPosForUIRect(Action rebackMethod)
     {
         if (scrollMoveType == ScrollMoveType.vertical)
         {
             if (UIRect.anchoredPosition.y > originUIRectPos.x)
             {
                 ChangeUIRectPos(originUIRectPos.x);
-            }else if (UIRect.anchoredPosition.y < originUIRectPos.y)
+            }
+            else if (UIRect.anchoredPosition.y < originUIRectPos.y)
             {
-                ChangeUIRectPos(originUIRectPos.y);
+                ChangeUIRectPos(originUIRectPos.y, rebackMethod);
             }
         }
-        else if(scrollMoveType==ScrollMoveType.horizontal)
+        else if (scrollMoveType == ScrollMoveType.horizontal)
         {
 
         }
@@ -223,9 +229,21 @@ public class UIScrollView : MonoBehaviour
         }
         else if (scrollMoveType == ScrollMoveType.horizontal)
         {
-           
+
         }
 
+    }
+
+    /// <summary>
+    /// 外部调用来注册 滑动结束后的 回调
+    /// </summary>
+    /// <param name="backCall">回调方法</param>
+    public void AddtheRebackFinishEvent(Action backCall)
+    {
+        if (rebackFinish == null)
+        {
+            rebackFinish = backCall;
+        }
     }
     #endregion 
 }
