@@ -10,3 +10,12 @@ public static class TransformSimplify
       trans.localPosition = pos;
    }
 }
+
+public static class RectTransformSimplify
+{
+    public static void SetAnchoredPosition(this RectTransform  rectTransform, float x = 0,float y = 0)
+    {
+        Vector2 pos = new Vector2(x,y);
+        rectTransform.anchoredPosition = pos;
+    }
+}

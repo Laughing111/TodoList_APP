@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37312013, g: 0.3807403, b: 0.35872707, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311912, g: 0.3807398, b: 0.3587271, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -550,6 +550,7 @@ GameObject:
   - component: {fileID: 1074369687}
   - component: {fileID: 1074369686}
   - component: {fileID: 1074369688}
+  - component: {fileID: 1074369689}
   m_Layer: 5
   m_Name: ItemBG
   m_TagString: Untagged
@@ -612,7 +613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9150943, g: 0.030215396, b: 0.030215396, a: 1}
+  m_Color: {r: 1, g: 0.75, b: 0.75, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -626,6 +627,21 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &1074369689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074369684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3473f9cea3a5bc48927b22fea89ad58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDrag: 0
+  ScreenRect: {fileID: 1312272149}
+  scrollMoveType: 1
 --- !u!1 &1312272148
 GameObject:
   m_ObjectHideFlags: 0
@@ -841,7 +857,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u5B66\u4E60AB\u6846\u67B6"
+  m_Text: AAAAA
 --- !u!222 &1845885777
 CanvasRenderer:
   m_ObjectHideFlags: 0
