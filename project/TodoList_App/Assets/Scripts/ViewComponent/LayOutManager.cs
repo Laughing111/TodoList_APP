@@ -5,14 +5,18 @@ using UnityEngine;
 
 public class LayOutManager : MonoBehaviour
 {
+    private UIScrollView uIScrollView;
     private void Awake()
     {
         Init();
     }
-
     public void Init()
     {
-        ItemManager.Ins.FinishCloneAndGoToAdd += AddChildItem;
+        if (ItemManager.Ins.FinishCloneAndGoToAdd == null)
+        {
+            ItemManager.Ins.FinishCloneAndGoToAdd += AddChildItem;
+        }
+        uIScrollView = transform.GetComponent<UIScrollView>();
     }
 
     public enum LayOutType
@@ -20,7 +24,6 @@ public class LayOutManager : MonoBehaviour
         Horizontal,
         Vertical
     }
-
     public LayOutType SetLayoutType;
 
     public int childCount=0;
@@ -29,19 +32,21 @@ public class LayOutManager : MonoBehaviour
     {
         childItem.SetParent(transform, false);
         childCount++;
+        Debug.Log("Add,And now have :"+childCount);
         SetLayOut(childItem,SetLayoutType);
     }
 
     private void SetLayOut(Transform childItem,LayOutType layOutType)
     {
+        Rect itemRect = childItem.GetComponent<RectTransform>().rect;
         if (layOutType == LayOutType.Vertical)
         {
-            childItem.transform.SetLocalPos(y: childItem.transform.localPosition.y+(-220) * (childCount - 1));
+            childItem.transform.SetLocalPos(y: childItem.transform.localPosition.y+(-1f)* itemRect.height * (childCount - 1));
         }
         else
         {
-            
+            childItem.transform.SetLocalPos(y: childItem.transform.localPosition.x + (1f) * itemRect.width * (childCount - 1));
         }
-        
+        uIScrollView.AddItem(itemRect);
     }
 }

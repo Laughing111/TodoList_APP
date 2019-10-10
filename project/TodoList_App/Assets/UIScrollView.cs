@@ -25,9 +25,20 @@ public class UIScrollView : MonoBehaviour
     private Vector2 deltaPos;
 
     /// <summary>
-    /// 拖拽前，拖拽UI的初始位置
+    /// 当前的子Item数量
     /// </summary>
-    private Vector2 originUIRectPos;
+    private int currentItemCount;
+
+    /// <summary>
+    /// 拖拽前，拖拽UI的两极位置（UIRect如果低于极最小值，则回归最小值，如果高于极最大值，则回归极最大值）
+    /// </summary>
+    public Vector2 originUIRectPos;
+
+    /// <summary>
+    /// Item内容所占的UI尺寸
+    /// </summary>
+    private Vector2 contentSize;
+
     public enum ScrollMoveType
     {
         horizontal,
@@ -43,7 +54,8 @@ public class UIScrollView : MonoBehaviour
     void Awake()
     {
         UIRect = transform.GetComponent<RectTransform>();
-        originUIRectPos = UIRect.anchoredPosition;
+        //初始计算Item内容的尺寸
+        CalculateOriginUIRectPos();
     }
 
     // Update is called once per frame
@@ -60,7 +72,7 @@ public class UIScrollView : MonoBehaviour
             }
         }
 
-        if ((Input.GetMouseButtonUp(0) && Input.touchCount <= 0)||! CheckTouchOverTheUIRect(touchPos))
+        if ((Input.GetMouseButtonUp(0) && Input.touchCount <= 0) || !CheckTouchOverTheUIRect(touchPos))
         {
             isDrag = false;
             deltaPos = Vector2.zero;
@@ -72,12 +84,44 @@ public class UIScrollView : MonoBehaviour
         }
         else
         {
-            UIRect.anchoredPosition = originUIRectPos;
+            //结束滑动时，按Item内容进行回归正常位置
+            CheckAndSetOriginPosForUIRect();
+        }
+    }
+
+
+    #region 内部计算工具
+    /// <summary>
+    /// 计算回归位置（极值）
+    /// </summary>
+    private void CalculateOriginUIRectPos()
+    {
+        currentItemCount = transform.childCount-1;
+
+        if (scrollMoveType == ScrollMoveType.vertical)
+        {
+            originUIRectPos.x = originUIRectPos.y= UIRect.anchoredPosition.y;
+            if (currentItemCount > 0)
+            {
+                contentSize.x = UIRect.GetChild(0).GetComponent<RectTransform>().rect.width;
+                for (int i=1;i< currentItemCount; i++)
+                {
+                    contentSize.y += UIRect.GetChild(i).GetComponent<RectTransform>().rect.height;
+                }
+            }
+            if (contentSize.y > UIRect.rect.height)
+            {
+                originUIRectPos.x = UIRect.anchoredPosition.y + contentSize.y - UIRect.rect.height;
+            }
+        }
+        else if(scrollMoveType==ScrollMoveType.horizontal)
+        {
+
         }
     }
 
     /// <summary>
-    /// 根据拖拽方式修改拖拽UI的位置
+    /// 根据拖拽方式修改拖拽UI的位置（计算相对差值）
     /// </summary>
     /// <param name="touchPos">推拽位置</param>
     private void ChangeUIRectPos(Vector2 touchPos)
@@ -91,9 +135,47 @@ public class UIScrollView : MonoBehaviour
             UIRect.SetAnchoredPosition(x: touchPos.x - deltaPos.x);
         }
     }
-        
+
     /// <summary>
-    /// 检查拖拽位置是否在UI内
+    /// 不计算相对差值
+    /// </summary>
+    /// <param name="originPosValue"></param>
+    private void ChangeUIRectPos(float originPosValue)
+    {
+        if (scrollMoveType == ScrollMoveType.vertical)
+        {
+            UIRect.SetAnchoredPosition(y: originPosValue);
+        }
+        else if (scrollMoveType == ScrollMoveType.horizontal)
+        {
+            UIRect.SetAnchoredPosition(x: originPosValue);
+        }
+    }
+
+    /// <summary>
+    /// 设置位置回归
+    /// </summary>
+    private void CheckAndSetOriginPosForUIRect()
+    {
+        if (scrollMoveType == ScrollMoveType.vertical)
+        {
+            if (UIRect.anchoredPosition.y > originUIRectPos.x)
+            {
+                ChangeUIRectPos(originUIRectPos.x);
+            }else if (UIRect.anchoredPosition.y < originUIRectPos.y)
+            {
+                ChangeUIRectPos(originUIRectPos.y);
+            }
+        }
+        else if(scrollMoveType==ScrollMoveType.horizontal)
+        {
+
+        }
+       
+    }
+
+    /// <summary>
+    /// 检查拖拽位置是否在UI内，screenRect 是有效滑动区域，也是遮罩显示区域
     /// </summary>
     /// <param name="touchPos"></param>
     /// <returns></returns>
@@ -101,13 +183,12 @@ public class UIScrollView : MonoBehaviour
     {
         if (ScreenRect != null)
         {
-            return RectTransformUtility.RectangleContainsScreenPoint(UIRect, touchPos)&& RectTransformUtility.RectangleContainsScreenPoint(ScreenRect, touchPos);
+            return RectTransformUtility.RectangleContainsScreenPoint(ScreenRect, touchPos);
         }
         else
         {
-            return RectTransformUtility.RectangleContainsScreenPoint(UIRect, touchPos);
+            return false;
         }
-        
     }
 
     /// <summary>
@@ -122,4 +203,29 @@ public class UIScrollView : MonoBehaviour
         return Input.mousePosition;
 #endif
     }
+
+    #endregion
+
+    #region 外部增加Item的调用方法
+    /// <summary>
+    /// 外部通知ScrollView,有Item增加
+    /// </summary>
+    public void AddItem(Rect itemRect)
+    {
+        if (scrollMoveType == ScrollMoveType.vertical)
+        {
+            contentSize.y += itemRect.height;
+
+            if (contentSize.y > UIRect.rect.height)
+            {
+                originUIRectPos.x = UIRect.anchoredPosition.y + contentSize.y - UIRect.rect.height;
+            }
+        }
+        else if (scrollMoveType == ScrollMoveType.horizontal)
+        {
+           
+        }
+
+    }
+    #endregion 
 }

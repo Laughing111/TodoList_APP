@@ -8,6 +8,10 @@ public class AppHandle
    [MenuItem("AppHandle/AddItemInPerDayPanel")]
    private static void AddItemInPerDayPanel()
    {
-      ItemManager.Ins.CreateItem("学习AB框架","10:00-12:00");
-   }
+        for(int i = 0; i < 10; i++)
+        {
+            ItemManager.Ins.CreateItem("ABABABABABABABAAABABABABABABBBBBABBABAABABABAABAB", "10:00-12:00");
+        }
+    }
+      
 }

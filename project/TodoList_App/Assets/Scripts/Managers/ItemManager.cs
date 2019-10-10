@@ -26,7 +26,6 @@ public class ItemManager : MonoBehaviour
                 }
 #endif
             }
-
             return ins;
         }
     }
