@@ -6,36 +6,24 @@ using UnityEngine.UI;
 
 public class ItemManager : MonoBehaviour
 {
-    private ItemManager()
+    private GameObject itemBG;
+    private void Awake()
     {
+       itemBG = transform.Find("ScrollRect/ItemBG").gameObject;
+       layOutManager = itemBG.GetComponent<LayOutManager>();
+        itemBG.GetComponent<UIScrollView>().AddtheRebackFinishEvent(ScrollViewEndEditeItem);
     }
 
-    private static ItemManager ins;
-
-    public static ItemManager Ins
+    /// <summary>
+    /// 滑动结束后，切换至输入界面
+    /// </summary>
+    private void ScrollViewEndEditeItem()
     {
-        get
-        {
-            if (ins == null)
-            {
-                ins = GameObject.Find("ItemManager").GetComponent<ItemManager>();
-                GameObject itemBG = GameObject.Find("ItemBG");
-                ins.layOutManager = itemBG.GetComponent<LayOutManager>();
-                itemBG.GetComponent<UIScrollView>().AddtheRebackFinishEvent(() => ins.CreateItem("BBBBBB", "10:00-15:00"));
-#if UNITY_EDITOR
-                if (ins.FinishCloneAndGoToAdd == null)
-                {
-                    GameObject.Find("ItemBG").GetComponent<LayOutManager>().Init();
-                }
-#endif
-            }
-            return ins;
-        }
+        Debug.Log("切换至输入Item页面");
+        CanvasManager.Ins.OpenOrCloseInputCanvas(true);
     }
 
     private LayOutManager layOutManager;
-
-    public Action<Transform> FinishCloneAndGoToAdd;
 
     public void CreateItem(string content, string timeDeadLine = null)
     {

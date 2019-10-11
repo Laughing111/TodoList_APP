@@ -12,10 +12,6 @@ public class LayOutManager : MonoBehaviour
     }
     public void Init()
     {
-        if (ItemManager.Ins.FinishCloneAndGoToAdd == null)
-        {
-            ItemManager.Ins.FinishCloneAndGoToAdd += AddChildItem;
-        }
         uIScrollView = transform.GetComponent<UIScrollView>();
     }
 

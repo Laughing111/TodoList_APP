@@ -17,7 +17,7 @@ TagManager:
   - InputCanvas
   - BGCanvas
   - MotionCanvas
-  - 
+  - PopUpCanvas
   - 
   - 
   - 
@@ -41,12 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: InputCanvas
-    uniqueID: 3190739221
-    locked: 0
   - name: BGCanvas
     uniqueID: 4268033587
     locked: 0
   - name: MotionCanvas
     uniqueID: 2294775207
+    locked: 0
+  - name: InputCanvas
+    uniqueID: 3190739221
+    locked: 0
+  - name: PopUpCanvas
+    uniqueID: 3176214883
     locked: 0

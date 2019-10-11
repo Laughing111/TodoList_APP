@@ -10,7 +10,7 @@ public class AppHandle
    {
         for(int i = 0; i < 10; i++)
         {
-            ItemManager.Ins.CreateItem("ABABABABABABABAAABABABABABABBBBBABBABAABABABAABAB", "10:00-12:00");
+           CanvasManager.Ins.ItemManager.CreateItem("ABABABABABABABAAABABABABABABBBBBABBABAABABABAABAB", "10:00-12:00");
         }
     }
       
