@@ -6,6 +6,11 @@ using UnityEngine;
 public class UIScrollView : MonoBehaviour
 {
     /// <summary>
+    /// 渲染相机
+    /// </summary>
+    public Camera renderCamera;
+
+    /// <summary>
     /// 拖拽标志位
     /// </summary>
     public bool isDrag;
@@ -189,7 +194,7 @@ public class UIScrollView : MonoBehaviour
     {
         if (ScreenRect != null)
         {
-            return RectTransformUtility.RectangleContainsScreenPoint(ScreenRect, touchPos);
+            return RectTransformUtility.RectangleContainsScreenPoint(ScreenRect, touchPos,renderCamera);
         }
         else
         {

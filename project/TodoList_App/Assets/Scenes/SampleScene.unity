@@ -1282,6 +1282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 972793988898c4bcaabdad3f1cd1de0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderCamera: {fileID: 534669904}
   isDrag: 0
   ScreenRect: {fileID: 227460102}
   originUIRectPos: {x: 0, y: 0}
